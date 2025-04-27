@@ -1,0 +1,60 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+enum Difficulty{
+  EASY
+  MEDIUM
+  HARD
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  image     String?
+  role      UserRole @default(USER)
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+    problems  Problem[] // 1 to many relationship
+}
+
+model Problem {
+   id String @id @default(uuid())
+   title String
+   description String
+   difficulty Difficulty // Enum for difficulty level
+   tags String[] // ["tag1", "tag2", "tag3"]
+   userId String
+   examples  Json 
+   constraints String // Constraints are the limits of the problem
+   hints String? // Hints are optional hints for the problem
+   editorial String? // Editorial is a detailed explanation of the problem and its solution
+
+   // test case are the iput and output of the probles
+   testcases  Json //  [{"input": "input1", "output": "output1"},]
+   codeSnippets Json // [{"language": "python", "code": "print('Hello World')"}]
+   referenceSolutions Json // [{"language": "python", "code": "print('Hello World')"}]
+
+// 1 to many relationship
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+
+ 
+
+   //  Relationship
+  user  User    @relation(fields: [userId], references: [id] , onDelete: Cascade)
+}

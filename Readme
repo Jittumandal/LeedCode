@@ -1,0 +1,49 @@
+// Backend used 
+
+1, Node - js
+2, Express-js
+3, postgres
+4, prisma
+5, judgeo:- for code execution
+
+// Frontend 
+1, javascript
+2, React-js/ vite
+3, Tailwind-css
+4,Diasy-ui
+5,Zustand
+6, zod and react hooks forms
+
+// fiet create folder command
+ mkdir-Backend
+ mkdir-Frontend
+
+ // install project dependencies
+ cd Backend
+ npm init -y  nodemon Express pri 
+ npm init -y
+ npm i nodemon -D nodemon express prisma judgeo dotenv cors bcryptjs jsonwebtoken  
+ npm i @prisma/client 
+ npx prisma init - create to schema prisma file
+
+ npx prisma generate // it is used to generate the client code for prisma
+
+ npx prisma migrate dev // it is used to create the database and apply the migratetion
+ 
+ npx prisma migrate reset
+
+ npx prisma db push
+
+ npm i bcryptjs  // for hashing password
+
+ npm i jsonwebtoken // for create token
+ npm  i  cookie-parser  // for cookie parser
+
+ openssl rand  -hex 32 // for create jwt sercret key
+
+
+ sudo apt install wsl // for windows user to install wsl
+
+ 
+
+ 
