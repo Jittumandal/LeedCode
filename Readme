@@ -1,4 +1,4 @@
-// Backend used 
+// Backend used
 
 1, Node - js
 2, Express-js
@@ -6,7 +6,7 @@
 4, prisma
 5, judgeo:- for code execution
 
-// Frontend 
+// Frontend
 1, javascript
 2, React-js/ vite
 3, Tailwind-css
@@ -15,35 +15,53 @@
 6, zod and react hooks forms
 
 // fiet create folder command
- mkdir-Backend
- mkdir-Frontend
+mkdir-Backend
+mkdir-Frontend
 
- // install project dependencies
- cd Backend
- npm init -y  nodemon Express pri 
- npm init -y
- npm i nodemon -D nodemon express prisma judgeo dotenv cors bcryptjs jsonwebtoken  
- npm i @prisma/client 
- npx prisma init - create to schema prisma file
+// install project dependencies
+cd Backend
+npm init -y nodemon Express pri
+npm init -y
+npm i nodemon -D nodemon express prisma judgeo dotenv cors bcryptjs jsonwebtoken  
+ npm i @prisma/client
+npx prisma init - create to schema prisma file
 
- npx prisma generate // it is used to generate the client code for prisma
+npx prisma generate // it is used to generate the client code for prisma
 
- npx prisma migrate dev // it is used to create the database and apply the migratetion
- 
- npx prisma migrate reset
+npx prisma migrate dev // it is used to create the database and apply the migratetion
 
- npx prisma db push
+npx prisma migrate reset
 
- npm i bcryptjs  // for hashing password
+npx prisma db push
 
- npm i jsonwebtoken // for create token
- npm  i  cookie-parser  // for cookie parser
+npm i bcryptjs // for hashing password
 
- openssl rand  -hex 32 // for create jwt sercret key
+npm i jsonwebtoken // for create token
+npm i cookie-parser // for cookie parser
 
+openssl rand -hex 32 // for create jwt sercret key
 
- sudo apt install wsl // for windows user to install wsl
+wsl --install // for install wsl in windows
+what is wsl?
+wsl --install -d Ubuntu // for install ubuntu in wsl
 
- 
+sudo apt update // for update the ubuntu
+sudo apt upgrade // for upgrade the ubuntu
+sudo nano /etc/default/grub // for open the grub file
 
- 
+sudo apt install -y docker.io// for install docker in ubuntu
+
+sudo apt install -y docker-compose // for install docker-compose in ubuntu
+
+// for install judgeo in docker
+wget https://github.com/judge0/judge0/releases/download/v1.13.1/judge0-v1.13.1.zip
+
+unzip judge0-v1.13.1.zip // for unzip the file
+cd judge0-v1.13.1 // for go to the judge0 folder
+ls // for list the files in the folder
+nano judge0.conf // for open the judge0.conf file
+
+docker-compose up -d db redis // for run the docker-compose file in background
+
+docker-compose up -d // for start
+docker stop 1f99 // for close
