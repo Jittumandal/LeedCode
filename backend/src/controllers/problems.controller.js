@@ -14,7 +14,7 @@ const createProblem = async (req, res) => {
     }
 
     try {
-        // create for loop 
+        // create the for loop
         for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
             const languageId = getJudge0LanguageId(language);
 
@@ -22,37 +22,43 @@ const createProblem = async (req, res) => {
             if (!languageId) {
                 return res.status(401).json({ message: ` Language ${language} is not supported ` })
             }
-        }
 
-        // submission object 
-        const submission = testcases.map(({ input, output }) => ({
-            source_code: solutionCode,
-            language_id: languageId,
-            stdin: input,
-            expected_output: output,
-        }))
+            // submission object 
+            const submission = testcases.map(({ input, output }) => ({
+                source_code: solutionCode,
+                language_id: languageId,
+                stdin: input,
+                expected_output: output,
+            }))
 
-        // get the submitBatch from the judge0.libs.js file
-        const submissionResult = await submitBatch(submission)
 
-        // get the token from the submissionResult array from the judge0.libs.js file
-        const token = submissionResult.map((res) => res.token)
+            // get the submitBatch from the judge0.libs.js file
+            const submissionResult = await submitBatch(submission)
 
-        // get the pollBatchResults results from the judge0.libs.js file
-        const result = await pollBatchResults(token)
+            // get the token from the submissionResult array from the judge0.libs.js file
+            const tokens = submissionResult.map((res) => res.token)
 
-        // get the result from the judge0.libs.js file 
-        for (let i = 0; i < result.length; i++) {
-            const result = result[i];
-            console.log('Result....', result);
+            // get the pollBatchResults results from the judge0.libs.js file
+            const results = await pollBatchResults(tokens)
 
-            // check if the result is correct
-            if (result.status.id !== 3) {
-                return res.status(401).json({ message: `Testcase ${i + 1} failed for language ${language}` })
-            }
-        }
+            for (let i = 0; i < results.length; i++) {
+                const result = results[i];
+                console.log("Result-----", result);
+                // console.log(
+                //   `Testcase ${i + 1} and Language ${language} ----- result ${JSON.stringify(result.status.description)}`
+                // );
+                if (result.status.id !== 3) {
+                    return res.status(400).json({
+                        error: `Testcase ${i + 1} failed for language ${language}`,
+                    });
+                }
 
-        // save th problem data in the database
+            } // close the second for loop
+
+
+        } // close the for loop
+
+        // create the problem in the database
         const newProblem = await db.problem.create({
             data: {
                 title,
@@ -68,15 +74,15 @@ const createProblem = async (req, res) => {
                 codeSnippets,
                 referenceSolutions,
                 userId: req.user.id,
-            },
-        });
-        // send the response
+            }
+        })
+
+        // send response
         res.status(201).json({
             success: true,
-            message: "Problem created successfully",
-            problem: newProblem,
-        });
-
+            message: 'Problem created successfully',
+            problem: newProblem
+        })
 
     } catch (error) {
         console.error("Error creating problem:", error);

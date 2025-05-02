@@ -65,3 +65,5 @@ docker-compose up -d db redis // for run the docker-compose file in background
 
 docker-compose up -d // for start
 docker stop 1f99 // for close
+
+npx prisma studio // ye command use for open the  prisma studio (Data tablbe and schema tabble)
