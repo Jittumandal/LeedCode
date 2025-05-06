@@ -34,10 +34,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  problems Problem[] // 1 to many relationship
+  problems      Problem[] //  call by problems  model 
+  submission    Submission[] // call by submission  model 
+  problemSolved ProblemSolved[] //call by problemSolved  model
 }
 
-// This is the problem model for the database
+// This is the problem model for the database create problems
 model Problem {
   id          String     @id @default(uuid())
   title       String
@@ -61,4 +63,77 @@ model Problem {
 
   //  Relationship
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  submission    Submission[]
+  problemSolved ProblemSolved[]
+}
+
+// creaate user submisson model 
+model Submission {
+  id            String  @id @default(uuid())
+  userId        String
+  problemId     String
+  sourceCode    Json
+  language      String
+  stdin         String?
+  stdout        String?
+  stderr        String?
+  compileOutput String?
+  status        String // Accepted , wrong answer
+  memory        String?
+  time          String?
+
+  // 1 to many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship user and problems 
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  //  Relationship Submission and testCases 
+  testCases TestCaseResult[]
+}
+
+// create testcases model
+
+model TestCaseResult {
+  id            String  @id @default(uuid())
+  submissionId  String
+  testCase      Int
+  passed        Boolean
+  stdout        String?
+  expected      String
+  stderr        String?
+  compileOutput String?
+  status        String
+  memory        String?
+  time          String?
+
+  // 1 to many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship Submission and testcases 
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+}
+
+// create by Problems Solved model
+model ProblemSolved {
+  id        String @id @default(uuid())
+  userId    String
+  problemId String
+
+  // 1 to many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship User and Problem 
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  // for find unique user id and problesm id
+  @@unique([userId, problemId])
 }

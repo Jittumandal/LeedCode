@@ -8,7 +8,7 @@ const createProblem = async (req, res) => {
 
     // check the user role and admin
     if (req.user.role !== 'ADMIN') {
-        return res.status(403).json({
+        return res.status(401).json({
             message: 'You are not authorized to create a problems'
         })
     }
@@ -96,14 +96,106 @@ const createProblem = async (req, res) => {
 }
 
 
-const getAllProblems = async (req, res) => { }
+const getAllProblems = async (req, res) => {
+    try {
+        // get all the problems from the database
+        const problems = await db.problem.findMany()
 
-const getProblembyId = async (req, res) => { }
+        // check if there are no problems
+        if (!problems) {
+            return res.status(401).json({
+                message: 'No problems found'
+            })
+        }
+        // send response
+        res.status(200).json({
+            success: true,
+            message: 'Problems fetched successfully',
+            problems
+        })
+    } catch (error) {
+        console.log("Error fetching problems:", error);
+        res.status(500).json({
+            error: "Error fetching problems",
+        });
+    }
+
+}
+
+const getProblembyId = async (req, res) => {
+    // get the problem id from the request params
+    const { id } = req.params;
+
+    try {
+        // find probles for findUnique kiy kyu kis sabh problesm ka unique id ho ga
+        const problem = await db.problem.findUnique({
+            where: {
+                id
+            }
+        })
+
+        // validate the probles
+        if (!problem) {
+            return res.status(404).json({
+                message: 'No is not problem found'
+            })
+        }
+        // send response by people who are lagged
+        res.status(200).json({
+            success: true,
+            message: 'Problem fetched successfully',
+            problem
+        })
+
+    } catch (error) {
+        console.log("Error fetching problem:", error);
+        res.status(500).json({
+            error: "Error fetching problem",
+        });
+
+    }
+}
 
 const updateProblem = async (req, res) => { }
 
 
-const deleteProblem = async (req, res) => { }
+const deleteProblem = async (req, res) => {
+
+    // get the problem id from the request params
+    const { id } = req.params;
+
+    try {
+        // find probles for findUnique kiy kyu kis sabh problesm ka unique id ho ga
+        const problem = await db.problem.findUnique({
+            where: {
+                id
+            }
+        })
+
+        // validate the probles
+        if (!problem) {
+            return res.status(401).json({
+                success: true,
+                message: 'The Problems deteled successfully',
+            })
+        }
+        // send response by people who are lagged
+        res.status(200).json({
+            success: true,
+            message: 'Problem deleted successfully',
+            problem
+        })
+    } catch (error) {
+        console.log("Error deleting  the problem:", error);
+        res.status(500).json({
+            error: "Error deleting the  problem",
+        });
+
+    }
+
+
+
+}
 
 const getAllProblemsSolvedByUserId = async (req, res) => { }
 

@@ -1,24 +1,29 @@
+// This file contains the Prisma schema for the database.
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
+// This is the database connection URL. 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// This is the database connection URL for the test database.
 enum UserRole {
   ADMIN
   USER
 }
 
+// This is the database connection URL for the test database.
 enum Difficulty {
   EASY
   MEDIUM
   HARD
 }
 
+// This is the user modle for the database 
 model User {
   id        String   @id @default(uuid())
   name      String?
@@ -29,27 +34,106 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  problems Problem[] // 1 to many relationship
+  problems      Problem[] //  call by problems  model 
+  submission    Submission[] // call by submission  model 
+  problemSolved ProblemSolved[] //call by problemSolved  model
 }
 
+// This is the problem model for the database create problems
 model Problem {
-  id                 String     @id @default(uuid())
-  title              String
-  description        String
-  difficulty         Difficulty // Enum for difficulty level
-  tags               String[] // ["tag1", "tag2", "tag3"]
-  userId             String
-  examples           Json
-  constraints        String // Constraints are the limits of the problem
-  hints              String? // Hints are optional hints for the problem
-  editorial          String? // Editorial is a detailed explanation of the problem and its solution
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  difficulty  Difficulty // Enum for difficulty level
+  tags        String[] // ["tag1", "tag2", "tag3"]
+  userId      String
+  examples    Json
+  constraints String // Constraints are the limits of the problem
+  hints       String? // Hints are optional hints for the problem
+  editorial   String? // Editorial is a detailed explanation of the problem and its solution
+
+  // test case are the iput and output of the probles
   testcases          Json //  [{"input": "input1", "output": "output1"},]
   codeSnippets       Json // [{"language": "python", "code": "print('Hello World')"}]
   referenceSolutions Json // [{"language": "python", "code": "print('Hello World')"}]
 
+  // 1 to many relationship
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   //  Relationship
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  submission    Submission[]
+  problemSolved ProblemSolved[]
+}
+
+// creaate user submisson model 
+model Submission {
+  id            String  @id @default(uuid())
+  userId        String
+  problemId     String
+  sourceCode    Json
+  language      String
+  stdin         String?
+  stdout        String?
+  stderr        String?
+  compileOutput String?
+  status        String // Accepted , wrong answer
+  memory        String?
+  time          String?
+
+  // 1 to many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship user and problems 
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  //  Relationship Submission and testCases 
+  testCases TestCaseResult[]
+}
+
+// create testcases model
+
+model TestCaseResult {
+  id            String  @id @default(uuid())
+  submissionId  String
+  testCase      Int
+  passed        Boolean
+  stdout        String?
+  expected      String
+  stderr        String?
+  compileOutput String?
+  status        String
+  memory        String?
+  time          String?
+
+  // 1 to many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship Submission and testcases 
+  submission Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+}
+
+// create by Problems Solved model
+model ProblemSolved {
+  id        String @id @default(uuid())
+  userId    String
+  problemId String
+
+  // 1 to many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship User and Problem 
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  // for find unique user id and problesm id
+  @@unique([userId, problemId])
 }
