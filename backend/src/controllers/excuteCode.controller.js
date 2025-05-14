@@ -9,7 +9,7 @@ const excuteCode = async (req, res) => {
         const userId = req.user.id;
 
         // validate test case 
-        if (Array.isArray(stdin) || stdin.length === 0 || Array.isArray(excepected_output) || excepected_output.length !== stdin.length) {
+        if (!Array.isArray(stdin) || stdin.length === 0 || !Array.isArray(excepected_output) || excepected_output.length !== stdin.length) {
             return res.status(401).json({
                 success: true,
                 message: 'Invalid test case'
