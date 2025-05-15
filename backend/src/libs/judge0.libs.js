@@ -59,4 +59,34 @@ const submitBatch = async (submissions) => {
     return data // [{token} , {token} , {token}]
 }
 
+// const getLanguageName = async (languageId) => {
+//     const LANGUAGE_NAMES = {
+//         74: "TypeScript",
+//         63: "JavaScript",
+//         71: "Python",
+//         62: "Java",
+//     }
+//     console.log('check language', JSON.stringify(LANGUAGE_NAMES[languageId.toUpperCase()]))
+
+//     return LANGUAGE_NAMES[languageId.toUpperCase()]
+// }
+export const getLanguageName = (language) => {
+    const languageMap = {
+        74: "TypeScript",
+        63: "JavaScript",
+        71: "Python",
+        62: "Java",
+    };
+
+    const result = {
+        language: language.toUpperCase(),
+        id: languageMap[language.toUpperCase()]
+    };
+
+    console.log(JSON.stringify(result));
+
+    return result.language;
+};
+
+
 export { getJudge0LanguageId, submitBatch, pollBatchResults }

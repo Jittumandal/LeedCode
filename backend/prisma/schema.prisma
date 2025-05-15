@@ -68,6 +68,11 @@ model Problem {
   problemSolved ProblemSolved[]
 }
 
+// enum Status{
+//   ACCEPTED
+//   WORNG_ANSWER
+// }
+
 // creaate user submisson model 
 model Submission {
   id            String  @id @default(uuid())
