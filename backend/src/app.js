@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.routes.js";
 import problemsRoutes from "./routes/problems.Routes.js";
 import excutionRoutes from "./routes/excuteCode.routes.js";
 import submissionRoutes from "./routes/submission.routes.js";
+import playlistRoutes from "./routes/playlist.routes.js";
 
 const app = express();
 
@@ -20,5 +21,6 @@ app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/problems', problemsRoutes)
 app.use('/api/v1/excute-code', excutionRoutes)
 app.use('/api/v1/submission', submissionRoutes)
+app.use('/api/v1/playlist', playlistRoutes)
 
 export default app;

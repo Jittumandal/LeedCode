@@ -37,6 +37,7 @@ model User {
   problems      Problem[] //  call by problems  model 
   submission    Submission[] // call by submission  model 
   problemSolved ProblemSolved[] //call by problemSolved  model
+  playlist      Playlist[] // call by playlist  model
 }
 
 // This is the problem model for the database create problems
@@ -64,9 +65,15 @@ model Problem {
   //  Relationship
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  submission    Submission[]
-  problemSolved ProblemSolved[]
+  submission      Submission[] // call by submission  model
+  problemSolved   ProblemSolved[] // call by problemSolved  model
+  ProblempLaylist ProblempLaylist[] // call by ProblempLaylist  model
 }
+
+// enum Status{
+//   ACCEPTED
+//   WORNG_ANSWER
+// }
 
 // creaate user submisson model 
 model Submission {
@@ -136,4 +143,43 @@ model ProblemSolved {
 
   // for find unique user id and problesm id
   @@unique([userId, problemId])
+}
+
+// model for user playlist
+model Playlist {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  userId      String
+
+  // 1 to many relationship ceated at and updated at playlist 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship User and Problem
+  problems ProblempLaylist[] // call by ProblempLaylist model
+
+  //  Relationship User and Problem 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // for find unique user id and problesm id and unique pla
+  @@unique([name, userId])
+}
+
+// model for problePlaylist 
+model ProblempLaylist {
+  id         String @id @default(uuid())
+  problemId  String
+  playlistId String
+
+  // 1 to many relationship
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //  Relationship User and Problem 
+  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  playlists Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+
+  // for find unique user id and problesm id
+  @@unique([problemId, playlistId])
 }
