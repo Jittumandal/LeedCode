@@ -14,6 +14,9 @@ import {
 import { Link } from "react-router-dom";
 
 import classes from "./AuthenticationImage.module.css";
+import AuthImagePattern from "../components/AuthImagePattern";
+import { useAuthStore } from "../store/useAuthStore";
+import { Loader } from "@mantine/core";
 
 // Validation schema
 const SignupSchema = z.object({
@@ -38,8 +41,15 @@ export default function Signup() {
     validate: zodResolver(SignupSchema),
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
+  // Get the signup function from the store
+  const { signup, isSigninUp } = useAuthStore();
+  const onSubmit = async (values) => {
+    try {
+      await signup(values);
+      console.log("Signup successful", values);
+    } catch (error) {
+      console.error("Signup error", error);
+    }
   };
 
   return (
@@ -78,8 +88,22 @@ export default function Signup() {
             {...form.getInputProps("keepLoggedIn", { type: "checkbox" })}
           />
 
-          <Button type="submit" fullWidth mt="xl" size="md" radius="sm">
-            Sign in
+          <Button
+            type="submit"
+            fullWidth
+            mt="xl"
+            size="md"
+            radius="sm"
+            disabled={isSigninUp}
+          >
+            {isSigninUp ? (
+              <>
+                <Loader color="blue" />
+                Loading...
+              </>
+            ) : (
+              "Sign in"
+            )}
           </Button>
         </form>
         <Text ta="center" mt="md">
@@ -89,6 +113,15 @@ export default function Signup() {
           </Link>
         </Text>
       </Paper>
+
+      {/* Right Side - Image/Pattern */}
+      {/* <AuthImagePattern
+        className={classes.codeshow}
+        title={"Welcome to our platform!"}
+        subtitle={
+          "Sign up to access our platform and start using our services."
+        }
+      /> */}
     </div>
   );
 }

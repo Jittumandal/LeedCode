@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { ThemeContext } from "./ThemeContext";
+import HeroSection from "./components/HeroSection";
 
 const WebApp = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -8,6 +9,8 @@ const WebApp = () => {
     <div className={`app ${theme}`}>
       <h1>{theme === "light" ? "Light Mode" : "Dark Mode"}</h1>
       <button onClick={toggleTheme}>Switch Theme</button>
+
+      <HeroSection />
     </div>
   );
 };

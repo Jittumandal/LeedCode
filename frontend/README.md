@@ -20,3 +20,8 @@ If you are developing a production application, we recommend using TypeScript wi
 6, zod and react hooks forms
 7, react-router-dom
 8, react-icons
+9, zod for validation form
+10,npm install axios zustand
+11, npm i react-hot-toast
+12, npm install @monaco-editor/react
+13, npm i monaco-editor

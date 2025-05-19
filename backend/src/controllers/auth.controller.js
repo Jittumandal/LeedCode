@@ -30,7 +30,7 @@ const registerUser = async (req, res) => {
                 password: hashedPassword,
                 name: name,
                 role: UserRole.USER,
-                image: "https://res.cloudinary.com/dqj0xgk8h/image/upload/v1698236482/avatars/default-avatar.png"
+                // image: "https://res.cloudinary.com/dqj0xgk8h/image/upload/v1698236482/avatars/default-avatar.png"
 
             }
         })

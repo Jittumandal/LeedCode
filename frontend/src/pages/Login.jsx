@@ -12,8 +12,9 @@ import {
   Title,
 } from "@mantine/core";
 import { Link } from "react-router-dom";
-
+import { useAuthStore } from "../store/useAuthStore.js";
 import classes from "./AuthenticationImage.module.css";
+import { Loader } from "@mantine/core";
 
 // Validation schema
 const loginSchema = z.object({
@@ -27,6 +28,8 @@ const loginSchema = z.object({
 });
 
 export default function Login() {
+  const { isLoggingIn, login } = useAuthStore();
+
   const form = useForm({
     //get values from the user ya cleint
     initialValues: {
@@ -36,8 +39,12 @@ export default function Login() {
     validate: zodResolver(loginSchema),
   });
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async (values) => {
+    try {
+      await login(values);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (
@@ -69,8 +76,22 @@ export default function Login() {
             {...form.getInputProps("keepLoggedIn", { type: "checkbox" })}
           />
 
-          <Button type="submit" fullWidth mt="xl" size="md" radius="sm">
-            login
+          <Button
+            type="submit"
+            fullWidth
+            mt="xl"
+            size="md"
+            radius="sm"
+            disabled={isLoggingIn}
+          >
+            {isLoggingIn ? (
+              <>
+                <Loader color="blue" />
+                Loading...
+              </>
+            ) : (
+              "Sign in"
+            )}
           </Button>
         </form>
         <Text ta="center" mt="md">
