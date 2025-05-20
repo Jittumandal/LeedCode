@@ -8,7 +8,7 @@ const AdminRoute = () => {
   // Show a loader while checking authentication status
   if (isCheckingAuth) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div>
         <Loader color="blue" />
       </div>
     );

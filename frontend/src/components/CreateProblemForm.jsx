@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { zodResolver } from "mantine-form-zod-resolver";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import {
   Select,
   Box,
   Text,
+  Loader,
 } from "@mantine/core";
 
 const problemSchema = z.object({
@@ -566,9 +567,10 @@ const CreateProblemForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (value) => {
+    console.log(value);
     try {
       setIsLoading(true);
-      const res = await axiosInstance.post("/problems/create-problem", value);
+      const res = await axiosInstance.post("/problems/createproblem", value);
       console.log(res.data);
       toast.success(res.data.message || "Problem Created successfully⚡");
       navigation("/");
@@ -618,10 +620,9 @@ const CreateProblemForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Basic Information */}
         <Box p="lg" shadow="sm" radius="md">
-          <Title order={2} mb="md">
+          <Text order={2} mb="md">
             Basic Information
-          </Title>
-
+          </Text>
           <TextInput
             mb="md"
             size="lg"
@@ -629,16 +630,15 @@ const CreateProblemForm = () => {
             {...register("title")}
             placeholder="Enter problem title"
           />
-          {errors.title && <span>{errors.title.message}</span>}
 
+          {errors?.title && <span>{errors.title.message}</span>}
           <Textarea
             mt="md"
             label="Description"
             {...register("description")}
             placeholder="Enter problem description"
           />
-          {errors.description && <span>{errors.description.message}</span>}
-
+          {errors?.description && <span>{errors.description.message}</span>}
           <Select
             mt="md"
             {...register("difficulty")}
@@ -648,12 +648,12 @@ const CreateProblemForm = () => {
             defaultValue="EASY"
             clearable
           />
-          {errors.difficulty && <span>{errors.difficulty.message}</span>}
+          {errors?.difficulty && <span>{errors.difficulty.message}</span>}
         </Box>
         {/* tags */}
         <Box p="lg" shadow="md" radius="md">
           <Group mt="lg" justify="space-between">
-            <Title order={1}>Tags</Title>
+            <Title order={3}>Tags</Title>
             <Button variant="filled" onClick={() => appendTag("")}>
               ➕ Add Tag
             </Button>
@@ -675,13 +675,13 @@ const CreateProblemForm = () => {
             </Group>
           ))}
 
-          {errors.tags && <span>{errors.tags.message}</span>}
+          {errors?.tags && <span>{errors.tags.message}</span>}
         </Box>
 
         {/* Test Cases */}
         <Box p="lg" shadow="md" radius="md">
           <Group mt="lg" justify="space-between">
-            <Title order={1}>Test Cases</Title>
+            <Title order={3}>Test Cases</Title>
             <Button
               variant="filled"
               onClick={() => appendTestCase({ input: "", output: "" })}
@@ -691,9 +691,9 @@ const CreateProblemForm = () => {
           </Group>
 
           {testCaseFields.map((field, index) => (
-            <Box key={field.id} p="md" shadow="sm" radius="md" mt="md">
+            <Box key={field.id} shadow="sm" radius="md" mt="md">
               <Group justify="space-between">
-                <Title order={2}>Test Case #{index + 1}</Title>
+                <Title order={3}>Test Case #{index + 1}</Title>
                 <Button
                   variant="filled"
                   onClick={() => removeTestCase(index)}
@@ -709,8 +709,8 @@ const CreateProblemForm = () => {
                 {...register(`testcases.${index}.input`)}
                 placeholder="Enter test case input"
               />
-              {errors.testcases?.[index]?.input && (
-                <span>{errors.testcases[index].input.message}</span>
+              {errors?.testcases?.[index]?.input && (
+                <span>{errors?.testcases[index].input.message}</span>
               )}
 
               <Textarea
@@ -719,13 +719,13 @@ const CreateProblemForm = () => {
                 {...register(`testcases.${index}.output`)}
                 placeholder="Enter expected output"
               />
-              {errors.testcases?.[index]?.output && (
+              {errors?.testcases?.[index]?.output && (
                 <span>{errors.testcases[index].output.message}</span>
               )}
             </Box>
           ))}
 
-          {errors.testcases && !Array.isArray(errors.testcases) && (
+          {errors?.testcases && !Array.isArray(errors.testcases) && (
             <span>{errors.testcases.message}</span>
           )}
         </Box>
@@ -733,11 +733,13 @@ const CreateProblemForm = () => {
         {/* Code Editor Sections */}
         <Box p="lg" shadow="md" radius="md">
           {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
-            <Box key={language} mt="lg" p="md" shadow="sm" radius="md">
-              <Title order={2}>{language}</Title>
+            <Box key={language} shadow="sm" radius="md">
+              <Title order={3}>{language}</Title>
 
               <Box mt="md">
-                <Title order={3}>Starter Code Template</Title>
+                <Title order={4} mb="md">
+                  Starter Code Template
+                </Title>
                 <Controller
                   name={`codeSnippets.${language}`}
                   control={control}
@@ -759,13 +761,15 @@ const CreateProblemForm = () => {
                     />
                   )}
                 />
-                {errors.codeSnippets?.[language] && (
+                {errors?.codeSnippets?.[language] && (
                   <span>{errors.codeSnippets[language].message}</span>
                 )}
               </Box>
 
               <Box mt="md">
-                <Title order={3}>Reference Solution</Title>
+                <Title order={3} mb="md">
+                  Reference Solution
+                </Title>
                 <Controller
                   name={`referenceSolutions.${language}`}
                   control={control}
@@ -787,32 +791,37 @@ const CreateProblemForm = () => {
                     />
                   )}
                 />
-                {errors.referenceSolutions?.[language] && (
+                {errors?.referenceSolutions?.[language] && (
                   <span>{errors.referenceSolutions[language].message}</span>
                 )}
               </Box>
 
               <Box mt="md">
-                <Title order={3}>Example</Title>
+                <Title order={3} mb="md">
+                  Example
+                </Title>
                 <Textarea
+                  mb="md"
                   label="Input"
                   {...register(`examples.${language}.input`)}
                   placeholder="Example input"
                 />
-                {errors.examples?.[language]?.input && (
+                {errors?.examples?.[language]?.input && (
                   <span>{errors.examples[language].input.message}</span>
                 )}
 
                 <Textarea
+                  mb="md"
                   label="Output"
                   {...register(`examples.${language}.output`)}
                   placeholder="Example output"
                 />
-                {errors.examples?.[language]?.output && (
+                {errors?.examples?.[language]?.output && (
                   <span>{errors.examples[language].output.message}</span>
                 )}
 
                 <Textarea
+                  mb="md"
                   label="Explanation"
                   {...register(`examples.${language}.explanation`)}
                   placeholder="Explain the example"
@@ -821,21 +830,24 @@ const CreateProblemForm = () => {
             </Box>
           ))}
 
-          <Box mt="lg" p="md" shadow="sm" radius="md">
+          <Box mt="lg" shadow="sm" radius="md">
             <Title order={2}>Additional Information</Title>
             <Textarea
+              mb="md"
               label="Constraints"
               {...register("constraints")}
               placeholder="Enter problem constraints"
             />
-            {errors.constraints && <span>{errors.constraints.message}</span>}
+            {errors?.constraints && <span>{errors.constraints.message}</span>}
 
             <Textarea
+              mb="md"
               label="Hints (Optional)"
               {...register("hints")}
               placeholder="Enter hints for solving the problem"
             />
             <Textarea
+              mb="md"
               label="Editorial (Optional)"
               {...register("editorial")}
               placeholder="Enter problem editorial/solution explanation"
@@ -844,11 +856,7 @@ const CreateProblemForm = () => {
 
           <Box mt="lg" display="flex" justifyContent="flex-end">
             <Button type="submit" variant="filled" size="lg">
-              {isLoading ? (
-                <span className="loading loading-spinner text-white"></span>
-              ) : (
-                "Create Problem"
-              )}
+              {isLoading ? <Loader color="blue" /> : "Create Problem"}
             </Button>
           </Box>
         </Box>

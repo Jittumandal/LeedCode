@@ -61,4 +61,3 @@ docker stop 1f99 // for close
 npx prisma studio // ye command use for open the prisma studio (Data tablbe and schema tabble)
 
 // code from frontend kya kya used hoga
-
