@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import { Loader } from "@mantine/core";
 import Layout from "../Layout/Layout";
 import AdminRoute from "../components/AdminRoute";
+import ProblemPage from "../pages/ProblemPage";
 
 const AppRoutes = () => {
   // Get authentication state and actions from the store
@@ -43,6 +44,11 @@ const AppRoutes = () => {
         <Route
           path="signup"
           element={!authUser ? <Signup /> : <Navigate to={"/"} />}
+        />
+
+        <Route
+          path="/problem/:id"
+          element={authUser ? <ProblemPage /> : <Navigate to={"/login"} />}
         />
 
         <Route element={<AdminRoute />}>

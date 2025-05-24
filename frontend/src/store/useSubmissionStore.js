@@ -1,0 +1,59 @@
+import { create } from "zustand";
+import axiosInstance from "../lib/axios.js"; // Import the axios instance
+import toast from "react-hot-toast";
+
+const useSubmissionStore = create((set,) => ({
+    isLoading: false,
+    submissions: [],
+    submission: null,
+    submissionCount: null,
+
+    getAllSubmissions: async () => {
+        try {
+            set({ isLoading: true });
+            const res = await axiosInstance.get("/submission/getallsubmissions");
+
+            set({ submissions: res.data.submissions });
+
+            toast.success(res.data.message);
+        } catch (error) {
+            console.log("Error getting all submissions", error);
+            toast.error("Error getting all submissions");
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    getSubmissionForProblem: async (problemId) => {
+        try {
+            const res = await axiosInstance.get(
+                `/submission/getsubmissions/${problemId}`
+            );
+
+            set({ submission: res.data.submissions });
+
+        } catch (error) {
+            console.log("Error getting submissions for problem", error);
+
+            toast.error("Error getting submissions for problem");
+
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    getSubmissionCountForProblem: async (problemId) => {
+        try {
+            const res = await axiosInstance.get(
+                `/submission/getsubmissionscont/${problemId}`
+            );
+
+            set({ submissionCount: res.data.count });
+        } catch (error) {
+            console.log("Error getting submission count for problem", error);
+            toast.error("Error getting submission count for problem");
+        }
+    },
+}));
+
+export default useSubmissionStore;
