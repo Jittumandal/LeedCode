@@ -1,10 +1,10 @@
-import { Button, Container, Text, Title } from "@mantine/core";
+import { Button, Container, Group, Text, Title } from "@mantine/core";
 import classes from "./HeaderTabs.module.css";
 
 export default function HeroSection() {
   return (
     <Container className={classes.wrapper} size="lg">
-      <div className={classes.inner}>
+      <Group justify="center" className={classes.inner}>
         <Title className={classes.title}>
           Welcome to
           <Text component="span" className={classes.highlight} inherit>
@@ -14,13 +14,15 @@ export default function HeroSection() {
 
         <Container p={0} size="md">
           <Text size="lg" c="dimmed" className={classes.description}>
-            A Platform Inspired by Leetcode which helps you to prepare for
-            coding interviews and helps you to improve your coding skills by
-            solving coding problems
+            A platform inspired by Leetcode, designed to help you excel in
+            coding interviews and enhance your programming skills. Through a
+            diverse collection of coding challenges, you can sharpen your
+            problem-solving abilities and gain confidence in technical
+            assessments.
           </Text>
         </Container>
 
-        <div className={classes.controls}>
+        {/* <div className={classes.controls}>
           <Button
             className={classes.control}
             size="lg"
@@ -32,8 +34,8 @@ export default function HeroSection() {
           <Button className={classes.control} size="lg">
             Purchase a license
           </Button>
-        </div>
-      </div>
+        </div> */}
+      </Group>
     </Container>
   );
 }

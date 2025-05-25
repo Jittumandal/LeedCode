@@ -59,6 +59,10 @@
 .inner {
     position: relative;
     z-index: 1;
+    justify-content: center;
+
+
+
 }
 
 .dots {
@@ -131,4 +135,138 @@
 
 .electSpan {
     color: #fc9a0c !important;
+}
+
+/* ===================== wrapper_of_tables css starts =======================*/
+.wrapperoftable {
+    background-color: #141427;
+    padding: 15px 0px 25px;
+    box-shadow: 0px 3px 3px -3px #232346;
+    border-radius: 5px;
+}
+
+.select {
+    background-color: #18182e;
+    box-shadow: 0px 3px 3px -3px #232346;
+    border-radius: 5px;
+    color: #fff;
+    border: 1px solid #323250;
+    padding: 7px;
+}
+
+.tablewrapper {
+    text-align: left;
+}
+
+.tablewrapper th {
+    font-size: 18px;
+    text-transform: capitalize;
+    border: 1px solid #17172e;
+    padding: 8px;
+}
+
+.tablewrapper td {
+    font-size: 14px;
+    text-transform: capitalize;
+    border: 1px solid #17172e;
+    padding: 5px;
+}
+
+.tablewrapper td:nth-child(5) {
+    text-align: center;
+
+}
+
+.tablewrapper td:last-child {
+    text-align: center;
+
+}
+
+.IconTrash {
+    color: #fc9a13;
+    margin-right: 10px;
+}
+
+.Plusicon {
+    color: #fba309;
+    margin-right: 10px;
+}
+
+/* ================ create probles css ============== */
+.inputarea input {
+    background-color: #18182e;
+    box-shadow: 0px 3px 3px -3px #232346;
+    border-radius: 5px;
+    color: #fff;
+    border: 1px solid #323250;
+    padding: 7px;
+}
+
+.inputarea textarea {
+    background-color: #18182e;
+    box-shadow: 0px 3px 3px -3px #232346;
+    border-radius: 5px;
+    color: #fff;
+    border: 1px solid #323250;
+    padding: 7px;
+    height: 100px;
+}
+
+.boxwrapper {
+    border: 1px solid #323250;
+    background-color: #141427;
+    box-shadow: 0px 3px 3px -3px #232346;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.addtag {
+    background-color: #18182e;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid #323250;
+    ;
+}
+
+/* ==================== Problems page ===================================== */
+
+.seticon {
+    color: #1f73bf !important;
+}
+
+.cardwrapper {
+    border: 1px solid #323250;
+    background-color: #141427 !important;
+    box-shadow: 0px 3px 3px -3px #232346 !important;
+    color: #fff !important;
+}
+
+.problesdescription {
+    color: #fff;
+    background-color: #141427 !important;
+    box-shadow: 0px 3px 3px -3px #232346 !important;
+}
+
+.innerbox {
+    border: 1px solid #323250;
+    background-color: #141427 !important;
+    box-shadow: 0px 3px 3px -3px #232346 !important;
+}
+
+.tabshover:hover {
+    background-color: #26264a !important;
+}
+
+.resultable th {
+    font-size: 18px;
+    text-transform: capitalize;
+    border: 1px solid #17172e;
+    padding: 8px;
+}
+
+.resultable td {
+    font-size: 14px;
+    text-transform: capitalize;
+    border: 1px solid #17172e;
+    padding: 5px;
 }

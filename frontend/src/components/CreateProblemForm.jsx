@@ -18,7 +18,10 @@ import {
   Box,
   Text,
   Loader,
+  Stack,
 } from "@mantine/core";
+import { IconHexagonPlus, IconTrash, IconDownload } from "@tabler/icons-react";
+import classes from "./HeaderTabs.module.css"; // Assuming you have a CSS module for styles
 
 const problemSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -592,215 +595,249 @@ const CreateProblemForm = () => {
 
   return (
     <Container size="lg">
-      <Group mt="lg" justify="center">
+      <Group mt="xl" justify="space-between">
         <Title order={1}>Create Problem</Title>
-        <Button
-          variant="filled"
-          className={sampleType === "DP" ? "btn-active" : ""}
-          onClick={() => setSampleType("array")}
-        >
-          DP Problem
-        </Button>
-        <Button
-          variant="filled"
-          className={sampleType === "string" ? "btn-active" : ""}
-          onClick={() => setSampleType("string")}
-        >
-          String Problem
-        </Button>
-        <Button
-          variant="filled"
-          className="btn-secondary gap-2"
-          onClick={loadSampleData}
-        >
-          Download Sample
-        </Button>
+
+        <Group>
+          <Button
+            variant="filled"
+            className={sampleType === "DP" ? "btn-active" : ""}
+            onClick={() => setSampleType("array")}
+          >
+            DP Problem
+          </Button>
+          <Button
+            variant="filled"
+            className={sampleType === "string" ? "btn-active" : ""}
+            onClick={() => setSampleType("string")}
+          >
+            String Problem
+          </Button>
+          <Button
+            style={{ backgroundColor: "#fba309" }}
+            variant="normal"
+            className="btn-secondary gap-2"
+            onClick={loadSampleData}
+          >
+            <IconDownload stroke={2} style={{ marginRight: "10px" }} /> Load
+            Sample
+          </Button>
+        </Group>
       </Group>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Basic Information */}
-        <Box p="lg" shadow="sm" radius="md">
+        <Box className={classes.boxwrapper} p="lg" shadow="sm" radius="md">
           <Text order={2} mb="md">
             Basic Information
           </Text>
-          <TextInput
-            mb="md"
-            size="lg"
-            label="Title"
-            {...register("title")}
-            placeholder="Enter problem title"
-          />
+          <Group justify="space-between">
+            <TextInput
+              className={classes.inputarea}
+              w={"45%"}
+              mb="lg"
+              size="lg"
+              label="Title"
+              {...register("title")}
+              placeholder="Enter problem title"
+            />
 
-          {errors?.title && <span>{errors.title.message}</span>}
-          <Textarea
-            mt="md"
-            label="Description"
-            {...register("description")}
-            placeholder="Enter problem description"
-          />
-          {errors?.description && <span>{errors.description.message}</span>}
-          <Select
-            mt="md"
+            {errors?.title && <span>{errors.title.message}</span>}
+            <Textarea
+              className={classes.inputarea}
+              w={"45%"}
+              mt="md"
+              size="sm"
+              label="Description"
+              {...register("description")}
+              placeholder="Enter problem description"
+            />
+            {errors?.description && <span>{errors.description.message}</span>}
+          </Group>
+
+          <select
+            style={{ width: "45%" }}
+            className={classes.select}
             {...register("difficulty")}
-            label="Difficulty"
-            placeholder="Pick value"
-            data={["EASY", "MEDIUM", "HARD"]}
-            defaultValue="EASY"
-            clearable
-          />
-          {errors?.difficulty && <span>{errors.difficulty.message}</span>}
-        </Box>
-        {/* tags */}
-        <Box p="lg" shadow="md" radius="md">
-          <Group mt="lg" justify="space-between">
-            <Title order={3}>Tags</Title>
-            <Button variant="filled" onClick={() => appendTag("")}>
-              ➕ Add Tag
-            </Button>
-          </Group>
-
-          {tagFields.map((field, index) => (
-            <Group key={field.id} mt="md">
-              <TextInput
-                {...register(`tags.${index}`)}
-                placeholder="Enter tag"
-              />
-              <Button
-                variant="filled"
-                onClick={() => removeTag(index)}
-                disabled={tagFields.length === 1}
-              >
-                🗑️ Remove Tag
-              </Button>
-            </Group>
-          ))}
-
-          {errors?.tags && <span>{errors.tags.message}</span>}
-        </Box>
-
-        {/* Test Cases */}
-        <Box p="lg" shadow="md" radius="md">
-          <Group mt="lg" justify="space-between">
-            <Title order={3}>Test Cases</Title>
-            <Button
-              variant="filled"
-              onClick={() => appendTestCase({ input: "", output: "" })}
-            >
-              ➕ Add Test Case
-            </Button>
-          </Group>
-
-          {testCaseFields.map((field, index) => (
-            <Box key={field.id} shadow="sm" radius="md" mt="md">
-              <Group justify="space-between">
-                <Title order={3}>Test Case #{index + 1}</Title>
-                <Button
-                  variant="filled"
-                  onClick={() => removeTestCase(index)}
-                  disabled={testCaseFields.length === 1}
-                >
-                  🗑️ Remove
-                </Button>
-              </Group>
-
-              <Textarea
-                mt="md"
-                label="Input"
-                {...register(`testcases.${index}.input`)}
-                placeholder="Enter test case input"
-              />
-              {errors?.testcases?.[index]?.input && (
-                <span>{errors?.testcases[index].input.message}</span>
-              )}
-
-              <Textarea
-                mt="md"
-                label="Expected Output"
-                {...register(`testcases.${index}.output`)}
-                placeholder="Enter expected output"
-              />
-              {errors?.testcases?.[index]?.output && (
-                <span>{errors.testcases[index].output.message}</span>
-              )}
-            </Box>
-          ))}
-
-          {errors?.testcases && !Array.isArray(errors.testcases) && (
-            <span>{errors.testcases.message}</span>
+          >
+            <option value="EASY">Easy</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HARD">Hard</option>
+          </select>
+          {errors.difficulty && (
+            <span className="label-text-alt text-error">
+              {errors.difficulty.message}
+            </span>
           )}
         </Box>
+        {/* tags */}
+        <Stack className={classes.boxwrapper}>
+          <Box className={classes.addtag} p="sm" shadow="md" radius="md">
+            <Group mt="sm" justify="space-between">
+              <Title order={3}>Tags</Title>
+              <Button w={"14%"} variant="filled" onClick={() => appendTag("")}>
+                <IconHexagonPlus
+                  className={classes.Plusicon}
+                  stroke={2}
+                  style={{ marginRight: "25px" }}
+                />
+                Add Tag
+              </Button>
+            </Group>
+            {tagFields.map((field, index) => (
+              <Group justify="space-between" key={field.id} mt="md">
+                <TextInput
+                  w={"75%"}
+                  className={classes.inputarea}
+                  {...register(`tags.${index}`)}
+                  placeholder="Enter tag"
+                />
+                <Button
+                  variant="filled"
+                  onClick={() => removeTag(index)}
+                  disabled={tagFields.length === 1}
+                >
+                  <IconTrash className={classes.IconTrash} stroke={2} /> Remove
+                  Tag
+                </Button>
+              </Group>
+            ))}
+            {errors?.tags && <span>{errors.tags.message}</span>}
+          </Box>
+
+          {/* Test Cases */}
+          <Box className={classes.addtag} p="sm" shadow="md" radius="md">
+            <Group mt="lg" justify="space-between">
+              <Title order={3}>Test Cases</Title>
+              <Button
+                variant="filled"
+                onClick={() => appendTestCase({ input: "", output: "" })}
+              >
+                <IconHexagonPlus className={classes.Plusicon} stroke={2} />
+                Add Test Case
+              </Button>
+            </Group>
+
+            {testCaseFields.map((field, index) => (
+              <Box key={field.id} shadow="sm" radius="md" mt="md">
+                <Group justify="space-between">
+                  <Title order={3}>Test Case #{index + 1}</Title>
+                  <Button
+                    w={"15%"}
+                    variant="filled"
+                    onClick={() => removeTestCase(index)}
+                    disabled={testCaseFields.length === 1}
+                  >
+                    <IconTrash className={classes.IconTrash} stroke={2} />{" "}
+                    Remove
+                  </Button>
+                </Group>
+
+                <Textarea
+                  className={classes.inputarea}
+                  mt="md"
+                  label="Input"
+                  {...register(`testcases.${index}.input`)}
+                  placeholder="Enter test case input"
+                />
+                {errors?.testcases?.[index]?.input && (
+                  <span>{errors?.testcases[index].input.message}</span>
+                )}
+
+                <Textarea
+                  className={classes.inputarea}
+                  mt="md"
+                  label="Expected Output"
+                  {...register(`testcases.${index}.output`)}
+                  placeholder="Enter expected output"
+                />
+                {errors?.testcases?.[index]?.output && (
+                  <span>{errors.testcases[index].output.message}</span>
+                )}
+              </Box>
+            ))}
+
+            {errors?.testcases && !Array.isArray(errors.testcases) && (
+              <span>{errors.testcases.message}</span>
+            )}
+          </Box>
+        </Stack>
 
         {/* Code Editor Sections */}
-        <Box p="lg" shadow="md" radius="md">
+        <Box pt="md" shadow="md" radius="md">
           {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
             <Box key={language} shadow="sm" radius="md">
               <Title order={3}>{language}</Title>
-
               <Box mt="md">
-                <Title order={4} mb="md">
-                  Starter Code Template
-                </Title>
-                <Controller
-                  name={`codeSnippets.${language}`}
-                  control={control}
-                  render={({ field }) => (
-                    <Editor
-                      height="300px"
-                      language={language.toLowerCase()}
-                      theme="vs-dark"
-                      value={field.value}
-                      onChange={field.onChange}
-                      options={{
-                        minimap: { enabled: false },
-                        fontSize: 14,
-                        lineNumbers: "on",
-                        roundedSelection: false,
-                        scrollBeyondLastLine: false,
-                        automaticLayout: true,
-                      }}
+                <Group justify="space-between">
+                  <Box w={"48%"}>
+                    <Title order={3} mb="md">
+                      Starter Code Template
+                    </Title>
+                    <Controller
+                      name={`codeSnippets.${language}`}
+                      control={control}
+                      render={({ field }) => (
+                        <Editor
+                          height="300px"
+                          language={language.toLowerCase()}
+                          theme="vs-dark"
+                          value={field.value}
+                          onChange={field.onChange}
+                          options={{
+                            minimap: { enabled: false },
+                            fontSize: 14,
+                            lineNumbers: "on",
+                            roundedSelection: false,
+                            scrollBeyondLastLine: false,
+                            automaticLayout: true,
+                          }}
+                        />
+                      )}
                     />
-                  )}
-                />
-                {errors?.codeSnippets?.[language] && (
-                  <span>{errors.codeSnippets[language].message}</span>
-                )}
+                    {errors?.codeSnippets?.[language] && (
+                      <span>{errors.codeSnippets[language].message}</span>
+                    )}
+                  </Box>
+
+                  <Box w={"48%"}>
+                    <Title order={3} mb="md">
+                      Reference Solution
+                    </Title>
+                    <Controller
+                      name={`referenceSolutions.${language}`}
+                      control={control}
+                      render={({ field }) => (
+                        <Editor
+                          height="300px"
+                          language={language.toLowerCase()}
+                          theme="vs-dark"
+                          value={field.value}
+                          onChange={field.onChange}
+                          options={{
+                            minimap: { enabled: false },
+                            fontSize: 14,
+                            lineNumbers: "on",
+                            roundedSelection: false,
+                            scrollBeyondLastLine: false,
+                            automaticLayout: true,
+                          }}
+                        />
+                      )}
+                    />
+                    {errors?.referenceSolutions?.[language] && (
+                      <span>{errors.referenceSolutions[language].message}</span>
+                    )}
+                  </Box>
+                </Group>
               </Box>
 
-              <Box mt="md">
-                <Title order={3} mb="md">
-                  Reference Solution
-                </Title>
-                <Controller
-                  name={`referenceSolutions.${language}`}
-                  control={control}
-                  render={({ field }) => (
-                    <Editor
-                      height="300px"
-                      language={language.toLowerCase()}
-                      theme="vs-dark"
-                      value={field.value}
-                      onChange={field.onChange}
-                      options={{
-                        minimap: { enabled: false },
-                        fontSize: 14,
-                        lineNumbers: "on",
-                        roundedSelection: false,
-                        scrollBeyondLastLine: false,
-                        automaticLayout: true,
-                      }}
-                    />
-                  )}
-                />
-                {errors?.referenceSolutions?.[language] && (
-                  <span>{errors.referenceSolutions[language].message}</span>
-                )}
-              </Box>
-
-              <Box mt="md">
+              <Box p={"sm"} mb={"md"} mt="md" className={classes.boxwrapper}>
                 <Title order={3} mb="md">
                   Example
                 </Title>
                 <Textarea
+                  className={classes.inputarea}
                   mb="md"
                   label="Input"
                   {...register(`examples.${language}.input`)}
@@ -811,6 +848,7 @@ const CreateProblemForm = () => {
                 )}
 
                 <Textarea
+                  className={classes.inputarea}
                   mb="md"
                   label="Output"
                   {...register(`examples.${language}.output`)}
@@ -821,6 +859,7 @@ const CreateProblemForm = () => {
                 )}
 
                 <Textarea
+                  className={classes.inputarea}
                   mb="md"
                   label="Explanation"
                   {...register(`examples.${language}.explanation`)}
@@ -830,9 +869,16 @@ const CreateProblemForm = () => {
             </Box>
           ))}
 
-          <Box mt="lg" shadow="sm" radius="md">
+          <Box
+            p={"sm"}
+            mt="lg"
+            shadow="sm"
+            radius="md"
+            className={classes.boxwrapper}
+          >
             <Title order={2}>Additional Information</Title>
             <Textarea
+              className={classes.inputarea}
               mb="md"
               label="Constraints"
               {...register("constraints")}
@@ -841,12 +887,14 @@ const CreateProblemForm = () => {
             {errors?.constraints && <span>{errors.constraints.message}</span>}
 
             <Textarea
+              className={classes.inputarea}
               mb="md"
               label="Hints (Optional)"
               {...register("hints")}
               placeholder="Enter hints for solving the problem"
             />
             <Textarea
+              className={classes.inputarea}
               mb="md"
               label="Editorial (Optional)"
               {...register("editorial")}

@@ -6,11 +6,13 @@ import {
   TextInput,
   Select,
   Table,
+  Pagination,
 } from "@mantine/core";
 import React, { useState, useMemo } from "react";
-import { IconHexagonPlus } from "@tabler/icons-react";
+import { IconHexagonPlus, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useAuthStore } from "../store/useAuthStore.js";
 import { Link } from "react-router-dom";
+import classes from "./HeaderTabs.module.css"; // Assuming you have a CSS module for styles
 
 const ProblemsTables = ({ problems }) => {
   const { authUser } = useAuthStore();
@@ -52,41 +54,57 @@ const ProblemsTables = ({ problems }) => {
   }, [filteredProblems, currentPage]);
 
   return (
-    <Container size="xl">
+    <Container className={classes.wrapperoftable} size="lg">
       <Group justify="space-between" position="apart" mb="md">
         <Title order={2}>Problems</Title>
-        <Button leftIcon={<IconHexagonPlus size={18} />}>
-          Create Playlist
+        <Button>
+          <IconHexagonPlus className={classes.Plusicon} stroke={2} /> Create
+          Playlist
         </Button>
       </Group>
 
       {/* Filters */}
       <Group grow mb="md">
-        <TextInput
+        <input
+          type="text"
           placeholder="Search by title"
+          className={classes.select}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Select
-          data={[
-            { value: "ALL", label: "All Difficulties" },
-            ...difficulties.map((diff) => ({ value: diff, label: diff })),
-          ]}
+        <select
+          className={classes.select}
           value={difficulty}
-          onChange={setDifficulty}
-        />
-        <Select
-          data={[
-            { value: "ALL", label: "All Tags" },
-            ...allTags.map((tag) => ({ value: tag, label: tag })),
-          ]}
+          onChange={(e) => setDifficulty(e.target.value)}
+        >
+          <option value="ALL">All Difficulties</option>
+          {difficulties.map((diff) => (
+            <option key={diff} value={diff}>
+              {diff.charAt(0).toUpperCase() + diff.slice(1).toLowerCase()}
+            </option>
+          ))}
+        </select>
+        <select
+          className={classes.select}
           value={selectedTag}
-          onChange={setSelectedTag}
-        />
+          onChange={(e) => setSelectedTag(e.target.value)}
+        >
+          <option value="ALL">All Tags</option>
+          {allTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </select>
       </Group>
 
       {/* Problems Table */}
-      <Table striped highlightOnHover withBorder>
+      <Table
+        className={classes.tablewrapper}
+        striped
+        highlightOnHover
+        withBorder
+      >
         <thead>
           <tr>
             <th>Solved</th>
@@ -115,7 +133,13 @@ const ProblemsTables = ({ problems }) => {
                 </td>
                 <td>{problem.difficulty}</td>
                 <td>
-                  <Button variant="outline">Save to Playlist</Button>
+                  <IconTrash className={classes.IconTrash} stroke={2} />{" "}
+                  <IconEdit stroke={2} />
+                </td>
+                <td>
+                  <Button radius="normal" variant="filled">
+                    Save to Playlist
+                  </Button>
                 </td>
               </tr>
             ))
@@ -128,25 +152,17 @@ const ProblemsTables = ({ problems }) => {
           )}
         </tbody>
       </Table>
-      <div className="flex justify-center mt-6 gap-2">
-        <Button
-          className="btn btn-sm"
-          disabled={currentPage === 1}
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-        >
-          Prev
-        </Button>
-        <span className="btn btn-ghost btn-sm">
-          {currentPage} / {totalPages}
-        </span>
-        <Button
-          className="btn btn-sm"
-          disabled={currentPage === totalPages}
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-        >
-          Next
-        </Button>
-      </div>
+
+      <Group justify="center" mt="lg">
+        <Pagination
+          total={totalPages}
+          value={currentPage}
+          onChange={setCurrentPage}
+          color="blue"
+          size="sm"
+          position="center"
+        />
+      </Group>
     </Container>
   );
 };

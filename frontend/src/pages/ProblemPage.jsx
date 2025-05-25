@@ -35,7 +35,7 @@ import {
   IconBulb,
 } from "@tabler/icons-react";
 import { Loader } from "@mantine/core";
-
+import classes from "../components/HeaderTabs.module.css";
 const ProblemPage = () => {
   const { id } = useParams();
   const { getProblemById, problem, isProblemLoading } = useProblemStore();
@@ -113,7 +113,12 @@ const ProblemPage = () => {
     switch (activeTab) {
       case "description":
         return (
-          <Paper shadow="md" p="lg" radius="md">
+          <Paper
+            className={classes.problesdescription}
+            shadow="md"
+            p="lg"
+            radius="md"
+          >
             <Text size="lg" mb="md">
               {problem.description}
             </Text>
@@ -124,18 +129,29 @@ const ProblemPage = () => {
                   Examples:
                 </Text>
                 {Object.entries(problem.examples).map(([lang, example]) => (
-                  <Paper key={lang} shadow="sm" p="md" radius="md" mb="md">
+                  <Paper
+                    className={classes.innerbox}
+                    key={lang}
+                    shadow="sm"
+                    p="md"
+                    radius="md"
+                    mb="md"
+                  >
                     <Group mb="xs">
                       <Text weight={600} color="indigo">
                         Input:
                       </Text>
-                      <Code>{example.input}</Code>
+                      <Code style={{ backgroundColor: "#141427" }}>
+                        {example.input}
+                      </Code>
                     </Group>
                     <Group mb="xs">
                       <Text weight={600} color="indigo">
                         Output:
                       </Text>
-                      <Code>{example.output}</Code>
+                      <Code style={{ backgroundColor: "#141427" }}>
+                        {example.output}
+                      </Code>
                     </Group>
                     {example.explanation && (
                       <>
@@ -155,8 +171,15 @@ const ProblemPage = () => {
                 <Text size="xl" weight={700} mb="md">
                   Constraints:
                 </Text>
-                <Paper shadow="sm" p="md" radius="md">
-                  <Code>{problem.constraints}</Code>
+                <Paper
+                  className={classes.innerbox}
+                  shadow="sm"
+                  p="md"
+                  radius="md"
+                >
+                  <Code style={{ backgroundColor: "#141427" }}>
+                    {problem.constraints}
+                  </Code>
                 </Paper>
               </>
             )}
@@ -165,22 +188,43 @@ const ProblemPage = () => {
 
       case "submissions":
         return (
-          <SubmissionsList
-            submissions={submission}
-            isLoading={isSubmissionsLoading}
-          />
+          <Paper
+            className={classes.problesdescription}
+            shadow="sm"
+            p="md"
+            radius="md"
+            align="center"
+          >
+            <Text color="gray">
+              <SubmissionsList
+                submissions={submission}
+                isLoading={isSubmissionsLoading}
+              />
+            </Text>
+          </Paper>
         );
 
       case "discussion":
         return (
-          <Paper shadow="sm" p="md" radius="md" align="center">
+          <Paper
+            className={classes.problesdescription}
+            shadow="sm"
+            p="md"
+            radius="md"
+            align="center"
+          >
             <Text color="gray">No discussions yet</Text>
           </Paper>
         );
 
       case "hints":
         return (
-          <Paper shadow="sm" p="md" radius="md">
+          <Paper
+            className={classes.problesdescription}
+            shadow="sm"
+            p="md"
+            radius="md"
+          >
             {problem?.hints ? (
               <Paper shadow="xs" p="md" radius="md">
                 <Code>{problem.hints}</Code>
@@ -199,7 +243,7 @@ const ProblemPage = () => {
   };
 
   return (
-    <Container size={"lg"} mt="lg">
+    <Container size={"lg"} mt="xl">
       <Group justify="space-between">
         <Group gap="md">
           <Link to="/">
@@ -212,7 +256,7 @@ const ProblemPage = () => {
           </Text>
         </Group>
 
-        <Group gap="lg">
+        <Group gap="sm" w={"25%"}>
           <Button
             variant="subtle"
             color={isBookmarked ? "blue" : "gray"}
@@ -224,17 +268,8 @@ const ProblemPage = () => {
             <IconShare stroke={2} />
           </Button>
 
-          {/* <Select
-            placeholder="Select language"
-            data={Object.keys(problem?.codeSnippets || {}).map((lang) => ({
-              value: lang,
-              label: lang.charAt(0).toUpperCase() + lang.slice(1),
-            }))}
-            value={selectedLanguage}
-            onChange={handleLanguageChange}
-          /> */}
           <select
-            className="select select-bordered select-primary w-40"
+            className={classes.select}
             value={selectedLanguage}
             onChange={handleLanguageChange}
           >
@@ -247,10 +282,10 @@ const ProblemPage = () => {
         </Group>
       </Group>
 
-      <Group justify="space-between" mt={10}>
+      <Group justify="space-between" mb={10} mt={10}>
         <Group gap="md" mt="xs">
           <Group align="center" gap="xs">
-            <IconClock stroke={2} />
+            <IconClock className={classes.seticon} stroke={2} />
             <Text size="sm">
               Updated{" "}
               {new Date(problem?.createdAt).toLocaleString("en-US", {
@@ -262,12 +297,12 @@ const ProblemPage = () => {
           </Group>
 
           <Group align="center" gap="xs">
-            <IconUser stroke={2} />
+            <IconUser className={classes.seticon} stroke={2} />
             <Text size="sm">{submissionCount} Submissions</Text>
           </Group>
 
           <Group align="center" gap="xs">
-            <IconThumbUp stroke={2} />
+            <IconThumbUp className={classes.seticon} stroke={2} />
             <Text size="sm">95% Success Rate</Text>
           </Group>
         </Group>
@@ -276,10 +311,11 @@ const ProblemPage = () => {
       {/* Grid Layout */}
       <Group grow align="start">
         {/* Tabs Section */}
-        <Card shadow="md" p="lg" radius="md">
+        <Card className={classes.cardwrapper} shadow="md" p="lg" radius="md">
           <Tabs defaultValue="description">
             <Tabs.List>
               <Tabs.Tab
+                className={classes.tabshover}
                 value="description"
                 icon={<IconFileDescription stroke={2} />}
                 onClick={() => setActiveTab("description")}
@@ -287,6 +323,7 @@ const ProblemPage = () => {
                 <IconFileDescription stroke={2} /> Description
               </Tabs.Tab>
               <Tabs.Tab
+                className={classes.tabshover}
                 value="submissions"
                 icon={<IconCode stroke={2} />}
                 onClick={() => setActiveTab("submissions")}
@@ -294,6 +331,7 @@ const ProblemPage = () => {
                 <IconCode stroke={2} /> Submissions
               </Tabs.Tab>
               <Tabs.Tab
+                className={classes.tabshover}
                 value="discussion"
                 icon={<IconMessageDots stroke={2} />}
                 onClick={() => setActiveTab("discussion")}
@@ -302,6 +340,7 @@ const ProblemPage = () => {
                 Discussion
               </Tabs.Tab>
               <Tabs.Tab
+                className={classes.tabshover}
                 value="hints"
                 icon={<IconBulb stroke={2} />}
                 onClick={() => setActiveTab("hints")}
@@ -310,14 +349,14 @@ const ProblemPage = () => {
                 Hints
               </Tabs.Tab>
             </Tabs.List>
-            <Tabs.Panel value={activeTab} pt="md">
+            <Tabs.Panel style={{ color: "#000" }} value={activeTab} pt="md">
               {renderTabContent()}
             </Tabs.Panel>
           </Tabs>
         </Card>
 
         {/* Code Editor Section */}
-        <Card shadow="md" p="lg" radius="md">
+        <Card className={classes.cardwrapper} shadow="md" p="lg" radius="md">
           <Text fw={700}>Code Editor</Text>
           <ScrollArea h={600}>
             <Editor
@@ -346,13 +385,22 @@ const ProblemPage = () => {
               {!isExecuting && <IconPlayerPlay stroke={2} />}
               Run Code
             </Button>
-            <Button color="green">Submit Solution</Button>
+            <Button style={{ backgroundColor: "#fba309" }}>
+              Submit Solution
+            </Button>
           </Group>
         </Card>
       </Group>
 
       {/* Test Cases Section */}
-      <Card shadow="md" p="lg" mt="md" radius="md">
+      <Card
+        className={classes.cardwrapper}
+        shadow="md"
+        p="lg"
+        mt="md"
+        mb={"xl"}
+        radius="md"
+      >
         {submission ? (
           <Submission submission={submission} />
         ) : (
@@ -361,7 +409,7 @@ const ProblemPage = () => {
               Test Cases
             </Text>
             <ScrollArea>
-              <Table striped highlightOnHover>
+              <Table className={classes.resultable} striped highlightOnHover>
                 <thead>
                   <tr>
                     <th>Input</th>
