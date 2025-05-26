@@ -1,24 +1,33 @@
 import React from "react";
 
-const SubmissionResults = ({ submission }) => {
-  // Parse stringified arrays
-  const memoryArr = JSON.parse(submission.memory || "[]");
-  const timeArr = JSON.parse(submission.time || "[]");
+const SubmissionResults = ({ submission = {} }) => {
+  // Ensure submission.testCases is always an array
+  const testCases = Array.isArray(submission.testCases)
+    ? submission.testCases
+    : [];
 
-  // Calculate averages
+  console.log("SubmissionResults come ", submission);
+
+  // Parse stringified arrays safely
+  const memoryArr = submission.memory ? JSON.parse(submission.memory) : [];
+  const timeArr = submission.time ? JSON.parse(submission.time) : [];
+
+  // Ensure arrays are not empty before calculating averages
   const avgMemory =
-    memoryArr
-      .map((m) => parseFloat(m)) // remove ' KB' using parseFloat
-      .reduce((a, b) => a + b, 0) / memoryArr.length;
+    memoryArr.length > 0
+      ? memoryArr.map((m) => parseFloat(m)).reduce((a, b) => a + b, 0) /
+        memoryArr.length
+      : 0;
 
   const avgTime =
-    timeArr
-      .map((t) => parseFloat(t)) // remove ' s' using parseFloat
-      .reduce((a, b) => a + b, 0) / timeArr.length;
+    timeArr.length > 0
+      ? timeArr.map((t) => parseFloat(t)).reduce((a, b) => a + b, 0) /
+        timeArr.length
+      : 0;
 
-  const passedTests = submission.testCases.filter((tc) => tc.passed).length;
-  const totalTests = submission.testCases.length;
-  const successRate = (passedTests / totalTests) * 100;
+  const passedTests = testCases.filter((tc) => tc.passed).length;
+  const totalTests = testCases.length;
+  const successRate = totalTests > 0 ? (passedTests / totalTests) * 100 : 0;
 
   return (
     <div className="space-y-6">
@@ -32,7 +41,7 @@ const SubmissionResults = ({ submission }) => {
                 submission.status === "Accepted" ? "text-success" : "text-error"
               }`}
             >
-              {submission.status}
+              {submission.status || "Unknown"}
             </div>
           </div>
         </div>
@@ -79,16 +88,16 @@ const SubmissionResults = ({ submission }) => {
                 </tr>
               </thead>
               <tbody>
-                {submission.testCases.map((testCase) => (
+                {testCases.map((testCase) => (
                   <tr key={testCase.id}>
                     <td>
                       {testCase.passed ? (
                         <div className="flex items-center gap-2 text-success">
-                          CheckCircle2 icons Passed
+                          ✅ Passed
                         </div>
                       ) : (
                         <div className="flex items-center gap-2 text-error">
-                          XCircle icons Failed
+                          ❌ Failed
                         </div>
                       )}
                     </td>

@@ -1,4 +1,12 @@
 import React from "react";
+import { Card, Badge, Group, Text } from "@mantine/core";
+import {
+  IconCircleCheck,
+  IconXboxX,
+  IconAlarm,
+  IconDeviceSdCard,
+  IconCalendarWeek,
+} from "@tabler/icons-react";
 
 const SubmissionsList = ({ submissions, isLoading }) => {
   // Helper function to safely parse JSON strings
@@ -50,56 +58,49 @@ const SubmissionsList = ({ submissions, isLoading }) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {submissions.map((submission) => {
         const avgMemory = calculateAverageMemory(submission.memory);
         const avgTime = calculateAverageTime(submission.time);
 
         return (
-          <div
-            key={submission.id}
-            className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow rounded-lg"
-          >
-            <div className="card-body p-4">
-              <div className="flex items-center justify-between">
-                {/* Left Section: Status and Language */}
-                <div className="flex items-center gap-4">
-                  {submission.status === "Accepted" ? (
-                    <div className="flex items-center gap-2 text-success">
-                      CheckCircle2 icons
-                      <span className="font-semibold">Accepted</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-2 text-error">
-                      icons XCircle
-                      <span className="font-semibold">{submission.status}</span>
-                    </div>
-                  )}
-                  <div className="badge badge-neutral">
-                    {submission.language}
-                  </div>
-                </div>
+          <Card key={submission.id} shadow="sm" p="lg" radius="md" withBorder>
+            <Group position="apart">
+              {/* Left Section: Status and Language */}
+              <Group>
+                {submission.status === "Accepted" ? (
+                  <Group spacing="xs" style={{ color: "green" }}>
+                    <IconCircleCheck stroke={2} />
+                    <Text weight={500}>Accepted</Text>
+                  </Group>
+                ) : (
+                  <Group spacing="xs" style={{ color: "red" }}>
+                    <IconXboxX stroke={2} />
+                    <Text weight={500}>{submission.status}</Text>
+                  </Group>
+                )}
+                <Badge color="gray">{submission.language}</Badge>
+              </Group>
 
-                {/* Right Section: Runtime, Memory, and Date */}
-                <div className="flex items-center gap-4 text-base-content/70">
-                  <div className="flex items-center gap-1">
-                    Clock icons
-                    <span>{avgTime.toFixed(3)} s</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Memory className="w-4 h-4" />
-                    <span>{avgMemory.toFixed(0)} KB</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    Calendar icons
-                    <span>
-                      {new Date(submission.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+              {/* Right Section: Runtime, Memory, and Date */}
+              <Group spacing="md" style={{ color: "#6B7280" }}>
+                <Group spacing="xs">
+                  <IconAlarm stroke={2} />
+                  <Text>{avgTime.toFixed(3)} s</Text>
+                </Group>
+                <Group spacing="xs">
+                  <IconDeviceSdCard stroke={2} />
+                  <Text>{avgMemory.toFixed(0)} KB</Text>
+                </Group>
+                <Group spacing="xs">
+                  <IconCalendarWeek stroke={2} />
+                  <Text>
+                    {new Date(submission.createdAt).toLocaleDateString()}
+                  </Text>
+                </Group>
+              </Group>
+            </Group>
+          </Card>
         );
       })}
     </div>

@@ -99,7 +99,17 @@ const createProblem = async (req, res) => {
 const getAllProblems = async (req, res) => {
     try {
         // get all the problems from the database
-        const problems = await db.problem.findMany()
+        const problems = await db.problem.findMany(
+            // {
+            //     include: {
+            //         solvedBy: {
+            //             where: {
+            //                 userId: req.user.id
+            //             }
+            //         }
+            //     }
+            // }
+        );
 
         // check if there are no problems
         if (!problems) {

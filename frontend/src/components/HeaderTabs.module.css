@@ -192,6 +192,11 @@
     margin-right: 10px;
 }
 
+.Problemslink:hover {
+    color: #1f73bf;
+    text-decoration: underline;
+}
+
 /* ================ create probles css ============== */
 .inputarea input {
     background-color: #18182e;
@@ -262,6 +267,7 @@
     text-transform: capitalize;
     border: 1px solid #17172e;
     padding: 8px;
+    text-align: left;
 }
 
 .resultable td {

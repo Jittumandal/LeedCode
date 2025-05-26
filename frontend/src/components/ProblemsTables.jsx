@@ -116,33 +116,46 @@ const ProblemsTables = ({ problems }) => {
         </thead>
         <tbody>
           {paginatedProblems.length > 0 ? (
-            paginatedProblems.map((problem) => (
-              <tr key={problem.id}>
-                <td>
-                  <input type="checkbox" readOnly />
-                </td>
-                <td>
-                  <Link to={`/problem/${problem.id}`}>{problem.title}</Link>
-                </td>
-                <td>
-                  {problem.tags?.map((tag, idx) => (
-                    <span key={idx} style={{ marginRight: "5px" }}>
-                      {tag}
-                    </span>
-                  ))}
-                </td>
-                <td>{problem.difficulty}</td>
-                <td>
-                  <IconTrash className={classes.IconTrash} stroke={2} />{" "}
-                  <IconEdit stroke={2} />
-                </td>
-                <td>
-                  <Button radius="normal" variant="filled">
-                    Save to Playlist
-                  </Button>
-                </td>
-              </tr>
-            ))
+            paginatedProblems.map((problem) => {
+              const isSolved =
+                problem.solvedBy?.some(
+                  (user) => user.userId === authUser?.id
+                ) ?? false;
+
+              return (
+                <tr key={problem.id}>
+                  <td>
+                    <input type="checkbox" checked={isSolved} readOnly />
+                  </td>
+                  <td>
+                    <Link
+                      className={classes.Problemslink}
+                      title="Know More About Problems"
+                      to={`/problem/${problem.id}`}
+                    >
+                      {problem.title}
+                    </Link>
+                  </td>
+                  <td>
+                    {problem.tags?.map((tag, idx) => (
+                      <span key={idx} style={{ marginRight: "5px" }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </td>
+                  <td>{problem.difficulty}</td>
+                  <td>
+                    <IconTrash className={classes.IconTrash} stroke={2} />{" "}
+                    <IconEdit stroke={2} />
+                  </td>
+                  <td>
+                    <Button radius="normal" variant="filled">
+                      Save to Playlist
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan={5} style={{ textAlign: "center", padding: "20px" }}>

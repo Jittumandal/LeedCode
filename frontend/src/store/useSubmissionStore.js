@@ -34,9 +34,7 @@ const useSubmissionStore = create((set,) => ({
 
         } catch (error) {
             console.log("Error getting submissions for problem", error);
-
             toast.error("Error getting submissions for problem");
-
         } finally {
             set({ isLoading: false });
         }
@@ -47,7 +45,6 @@ const useSubmissionStore = create((set,) => ({
             const res = await axiosInstance.get(
                 `/submission/getsubmissionscont/${problemId}`
             );
-
             set({ submissionCount: res.data.count });
         } catch (error) {
             console.log("Error getting submission count for problem", error);

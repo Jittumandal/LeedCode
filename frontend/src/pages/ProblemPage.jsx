@@ -5,8 +5,8 @@ import useProblemStore from "../store/useProblemStore.js";
 import useSubmissionStore from "../store/useSubmissionStore.js";
 import useExecutionStore from "../store/useExecutionStore.js";
 import getLanguageId from "../lib/lang.js";
-import Submission from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
+import SubmissionResults from "../components/Submission";
 
 import {
   Container,
@@ -81,7 +81,7 @@ const ProblemPage = () => {
     }
   }, [activeTab, id]);
 
-  console.log("submission", submissions);
+  console.log("submission form first load submissions page", submissions);
 
   const handleLanguageChange = (e) => {
     const lang = e.target.value;
@@ -197,7 +197,7 @@ const ProblemPage = () => {
           >
             <Text color="gray">
               <SubmissionsList
-                submissions={submission}
+                submissions={submissions}
                 isLoading={isSubmissionsLoading}
               />
             </Text>
@@ -357,10 +357,12 @@ const ProblemPage = () => {
 
         {/* Code Editor Section */}
         <Card className={classes.cardwrapper} shadow="md" p="lg" radius="md">
-          <Text fw={700}>Code Editor</Text>
-          <ScrollArea h={600}>
+          <Text mb={"md"} fw={700}>
+            Code Editor
+          </Text>
+          <ScrollArea h={580}>
             <Editor
-              height="100%"
+              height="600px"
               language={selectedLanguage.toLowerCase()}
               theme="vs-dark"
               value={code}
@@ -378,7 +380,7 @@ const ProblemPage = () => {
           </ScrollArea>
           <Group mt="md" justify="space-between">
             <Button
-              className={`gap-2 ${isExecuting ? "loading" : ""}`}
+              className={`gap-2 ${isExecuting ? "loading..." : ""}`}
               onClick={handleRunCode}
               disabled={isExecuting}
             >
@@ -402,7 +404,7 @@ const ProblemPage = () => {
         radius="md"
       >
         {submission ? (
-          <Submission submission={submission} />
+          <SubmissionResults submission={submission} />
         ) : (
           <>
             <Text size="xl" fw={700} mb="md">

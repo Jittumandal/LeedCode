@@ -50,13 +50,16 @@ export default function Login() {
   return (
     <div className={classes.wrapper}>
       <Paper className={classes.form} shadow="md" padding="lg" withBorder>
-        <Title order={2} className={classes.title}>
-          Welcome back to Mantine!
+        <Title className={classes.title}>
+          Welcome to
+          <Text component="span" className={classes.highlight} inherit>
+            Adjustcode
+          </Text>
         </Title>
         <form onSubmit={form.onSubmit(onSubmit)}>
           <TextInput
             label="Email address"
-            placeholder="hello@gmail.com"
+            placeholder="Enter your Email "
             mt="md"
             size="md"
             radius="sm"
@@ -64,7 +67,7 @@ export default function Login() {
           />
           <PasswordInput
             label="Password"
-            placeholder="Your password"
+            placeholder="Enter Your password"
             mt="md"
             size="md"
             radius="sm"

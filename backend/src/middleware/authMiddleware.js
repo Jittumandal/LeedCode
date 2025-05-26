@@ -6,6 +6,7 @@ export const authMiddleware = async (req, res, next) => {
         // get the token from the cookies
         const token = req.cookies.jwt;
 
+        // console.log("Token received:", token);
         // check if the token exists
         if (!token) {
             return res.status(401).json({
@@ -18,12 +19,14 @@ export const authMiddleware = async (req, res, next) => {
 
         try {
             // verify the tokne using the secrty key
-            decoded = jwt.verify(token, process.env.JWT_SECREt_KEY);
+            decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+            console.log("Decoded token:", decoded);
         } catch (error) {
             return res.status(401).json({
                 message: "Unauthorized - Invalid token"
             })
         }
+
         // get the user from the data base
         const user = await db.user.findUnique({
             where: {
@@ -45,6 +48,7 @@ export const authMiddleware = async (req, res, next) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
+
 
         req.user = user;
         next();

@@ -79,9 +79,10 @@ export const getLanguageName = (language) => {
     };
 
     const result = {
-        language: language.toUpperCase(),
-        id: languageMap[language.toUpperCase()]
+        language: languageMap[language].toUpperCase() || "Unknown Language",
+        id: language,
     };
+    console.log("Language Result: ");
 
     console.log(JSON.stringify(result));
 
