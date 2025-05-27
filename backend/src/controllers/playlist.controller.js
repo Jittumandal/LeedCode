@@ -7,10 +7,11 @@ const createPlaylist = async (req, res) => {
         const { name, description } = req.body;
 
         // get userId from the request
-        const userId = req.user._id;
+        const userId = req.user.id;
+        // console.log('getting user id', userId)
 
         // check if the playlist already exists
-        const existingPlaylist = await db.playList.create({
+        const existingPlaylist = await db.Playlist.create({
             data: {
                 name: name,
                 description: description,
@@ -20,7 +21,7 @@ const createPlaylist = async (req, res) => {
         });
 
         // if the playlist already exists, return an error
-        if (existingPlaylist) {
+        if (!existingPlaylist) {
             return res.status(400).json({ message: "Playlist already exists" });
         }
 

@@ -6,22 +6,34 @@ import {
   TextInput,
   Select,
   Table,
+  Checkbox,
   Pagination,
 } from "@mantine/core";
 import React, { useState, useMemo } from "react";
 import { IconHexagonPlus, IconEdit, IconTrash } from "@tabler/icons-react";
 import { useAuthStore } from "../store/useAuthStore.js";
+import { useActions } from "../store/useActions.js";
+import usePlaylistStore from "../store/usePlaylistStore.js";
 import { Link } from "react-router-dom";
+import { Loader } from "@mantine/core";
+import CreatePlaylistModal from "./CreatePlaylistModal.jsx"; // Assuming you have a modal component for creating playlists
+
 import classes from "./HeaderTabs.module.css"; // Assuming you have a CSS module for styles
 
 const ProblemsTables = ({ problems }) => {
   const { authUser } = useAuthStore();
-
+  const { isDeletingProblem, onDeleteProblem } = useActions();
+  const { createplayLists } = usePlaylistStore();
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("ALL");
   const [selectedTag, setSelectedTag] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isAddToPlaylistModalOpen, setIsAddToPlaylistModalOpen] =
+    useState(false);
+  const [selectedProblemId, setSelectedProblemId] = useState(null);
 
+  // Extract all unique tags from problems
   const allTags = useMemo(() => {
     if (!Array.isArray(problems)) return [];
     const tagsSet = new Set();
@@ -29,8 +41,10 @@ const ProblemsTables = ({ problems }) => {
     return Array.from(tagsSet);
   }, [problems]);
 
+  // Define allowed difficulties
   const difficulties = ["EASY", "MEDIUM", "HARD"];
 
+  // Filter problems based on search, difficulty, and tags
   const filteredProblems = useMemo(() => {
     return (problems || [])
       .filter((problem) =>
@@ -44,6 +58,7 @@ const ProblemsTables = ({ problems }) => {
       );
   }, [problems, search, difficulty, selectedTag]);
 
+  // Pagination logic
   const itemsPerPage = 5;
   const totalPages = Math.ceil(filteredProblems.length / itemsPerPage);
   const paginatedProblems = useMemo(() => {
@@ -53,13 +68,28 @@ const ProblemsTables = ({ problems }) => {
     );
   }, [filteredProblems, currentPage]);
 
+  const handleDelete = (id) => {
+    onDeleteProblem(id);
+    console.log("Problem deleted with ID:", id);
+  };
+
+  const handleCreatePlaylist = async (values) => {
+    await createplayLists(values);
+    console.log("Playlist created successfully:", values);
+  };
+
+  const handleAddToPlaylist = (problemId) => {
+    setSelectedProblemId(problemId);
+    setIsAddToPlaylistModalOpen(true);
+  };
+
   return (
     <Container className={classes.wrapperoftable} size="lg">
       <Group justify="space-between" position="apart" mb="md">
         <Title order={2}>Problems</Title>
-        <Button>
-          <IconHexagonPlus className={classes.Plusicon} stroke={2} /> Create
-          Playlist
+        <Button onClick={() => setIsCreateModalOpen(true)}>
+          <IconHexagonPlus className={classes.Plusicon} stroke={2} />
+          Create Playlist
         </Button>
       </Group>
 
@@ -72,6 +102,7 @@ const ProblemsTables = ({ problems }) => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+
         <select
           className={classes.select}
           value={difficulty}
@@ -125,7 +156,7 @@ const ProblemsTables = ({ problems }) => {
               return (
                 <tr key={problem.id}>
                   <td>
-                    <input type="checkbox" checked={isSolved} readOnly />
+                    <Checkbox checked={isSolved} />
                   </td>
                   <td>
                     <Link
@@ -145,8 +176,23 @@ const ProblemsTables = ({ problems }) => {
                   </td>
                   <td>{problem.difficulty}</td>
                   <td>
-                    <IconTrash className={classes.IconTrash} stroke={2} />{" "}
-                    <IconEdit stroke={2} />
+                    {authUser?.role === "ADMIN" && (
+                      <>
+                        {isDeletingProblem ? (
+                          <>
+                            <Loader color="blue" />
+                            Loading...
+                          </>
+                        ) : (
+                          <IconTrash
+                            onClick={() => handleDelete(problem.id)}
+                            className={classes.IconTrash}
+                            stroke={2}
+                          />
+                        )}
+                        <IconEdit stroke={2} />
+                      </>
+                    )}
                   </td>
                   <td>
                     <Button radius="normal" variant="filled">
@@ -176,6 +222,13 @@ const ProblemsTables = ({ problems }) => {
           position="center"
         />
       </Group>
+
+      {/* Modals */}
+      <CreatePlaylistModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreatePlaylist}
+      />
     </Container>
   );
 };

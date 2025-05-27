@@ -37,7 +37,7 @@ model User {
   problems      Problem[] //  call by problems  model 
   submission    Submission[] // call by submission  model 
   problemSolved ProblemSolved[] //call by problemSolved  model
-  playlist      Playlist[] // call by playlist  model
+  playlists     Playlist[] // call by playlist  model
 }
 
 // This is the problem model for the database create problems
@@ -65,9 +65,10 @@ model Problem {
   //  Relationship
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  submission      Submission[] // call by submission  model
-  problemSolved   ProblemSolved[] // call by problemSolved  model
-  ProblempLaylist ProblempLaylist[] // call by ProblempLaylist  model
+  submission        Submission[] // call by submission  model
+  problemSolved     ProblemSolved[] // call by problemSolved  model
+  ProblempLaylists  ProblempLaylist[] // call by ProblempLaylist  model
+  ProblemInPlaylist ProblemInPlaylist[]
 }
 
 // enum Status{
@@ -160,7 +161,8 @@ model Playlist {
   problems ProblempLaylist[] // call by ProblempLaylist model
 
   //  Relationship User and Problem 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ProblemInPlaylist ProblemInPlaylist[]
 
   // for find unique user id and problesm id and unique pla
   @@unique([name, userId])
@@ -182,4 +184,17 @@ model ProblempLaylist {
 
   // for find unique user id and problesm id
   @@unique([problemId, playlistId])
+}
+
+model ProblemInPlaylist {
+  id         String   @id @default(uuid())
+  playListId String
+  problemId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  playlist Playlist @relation(fields: [playListId], references: [id], onDelete: Cascade)
+  problem  Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([playListId, problemId])
 }

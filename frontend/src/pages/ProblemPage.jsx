@@ -404,7 +404,7 @@ const ProblemPage = () => {
         radius="md"
       >
         {submission ? (
-          <SubmissionResults submission={submission} />
+          <SubmissionResults submissions={submission} />
         ) : (
           <>
             <Text size="xl" fw={700} mb="md">
